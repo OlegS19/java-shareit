@@ -19,22 +19,21 @@ import java.util.Optional;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
-    private final ItemMapper itemMapper;
 
     @Override
     public ItemDto createItem(ItemDto itemDto, Long userId) {
         User user = userRepository.getUserById(userId);
-        Item item = itemMapper.itemDtoToItem(itemDto);
+        Item item = ItemMapper.itemDtoToItem(itemDto);
         item.setOwner(user);
         log.info("Item with id = {} has been created", item.getId());
-        return itemMapper.itemToItemDto(itemRepository.createItem(item, user));
+        return ItemMapper.itemToItemDto(itemRepository.createItem(item, user));
     }
 
     @Override
     public List<ItemDto> getAllItems(Long userId) {
         List<ItemDto> items = new ArrayList<>();
         for (Item item : itemRepository.getAllItems(userId)) {
-            items.add(itemMapper.itemToItemDto(item));
+            items.add(ItemMapper.itemToItemDto(item));
         }
         log.info("Get all items");
         return items;
@@ -48,7 +47,7 @@ public class ItemServiceImpl implements ItemService {
             throw new NotFoundException("Item with id = " + itemId + "doesn't exist");
         }
         log.info("Item with id = {} is uploaded", itemId);
-        return itemMapper.itemToItemDto(item.get());
+        return ItemMapper.itemToItemDto(item.get());
     }
 
     @Override
@@ -68,7 +67,7 @@ public class ItemServiceImpl implements ItemService {
             updatedItem.get().setAvailable(itemDto.getAvailable());
         }
         log.info("Item with id = {} has been updated", itemId);
-        return itemMapper.itemToItemDto(updatedItem.get());
+        return ItemMapper.itemToItemDto(updatedItem.get());
     }
 
     @Override
@@ -78,7 +77,7 @@ public class ItemServiceImpl implements ItemService {
         }
         List<ItemDto> items = new ArrayList<>();
         for (Item item : itemRepository.searchItemByText(text, userId)) {
-            items.add(itemMapper.itemToItemDto(item));
+            items.add(ItemMapper.itemToItemDto(item));
         }
         log.info("Item has been found");
         return items;
@@ -99,6 +98,6 @@ public class ItemServiceImpl implements ItemService {
         }
         log.info("Item with id = {} has been removed", itemId);
         optionalItem = itemRepository.removeItemById(itemId, userId);
-        return itemMapper.itemToItemDto(optionalItem.get());
+        return ItemMapper.itemToItemDto(optionalItem.get());
     }
 }
