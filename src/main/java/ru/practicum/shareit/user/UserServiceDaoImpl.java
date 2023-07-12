@@ -14,23 +14,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceDaoImpl implements UserService {
     private final UserRepository repository;
-    private final UserMapper userMapper;
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        User user = userMapper.userDtotoUser(userDto);
+        User user = UserMapper.userDtotoUser(userDto);
         if (repository.isEmailExisted(user.getEmail())) {
             throw new ValidateException("User with email = " + userDto.getEmail() + " exists");
         }
         log.info("User with email = {}  has been created", userDto.getEmail());
-        return userMapper.userToUserDto(repository.createUser(user));
+        return UserMapper.userToUserDto(repository.createUser(user));
     }
 
     @Override
     public List<UserDto> getAllUsers() {
         List<UserDto> usersDto = new ArrayList<>();
         for (User user : repository.getAllUsers()) {
-            usersDto.add(userMapper.userToUserDto(user));
+            usersDto.add(UserMapper.userToUserDto(user));
         }
         log.info("Get all user");
         return usersDto;
@@ -40,7 +39,7 @@ public class UserServiceDaoImpl implements UserService {
     public UserDto getUserById(Long id) {
         User user = repository.getUserById(id);
         log.info("User with id = {} is uploaded", id);
-        return userMapper.userToUserDto(user);
+        return UserMapper.userToUserDto(user);
     }
 
     @Override
@@ -59,13 +58,13 @@ public class UserServiceDaoImpl implements UserService {
             user.setEmail(userDto.getEmail());
         }
         log.info("User with id = {} is updated", user.getId());
-        return userMapper.userToUserDto(user);
+        return UserMapper.userToUserDto(user);
     }
 
     @Override
     public UserDto removeUserById(Long id) {
         User user = repository.removeUserById(id);
         log.info("User with id = {} removed", id);
-        return userMapper.userToUserDto(user);
+        return UserMapper.userToUserDto(user);
     }
 }
