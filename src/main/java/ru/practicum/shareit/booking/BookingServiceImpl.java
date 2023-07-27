@@ -27,7 +27,6 @@ import static ru.practicum.shareit.util.Constants.SORT_BY_DESC;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
@@ -37,9 +36,11 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto createBooking(Long userId, BookingShortDto bookingShortDto) {
         Item item = itemRepository.findById(bookingShortDto.getItemId()).orElseThrow(() ->
                 new NotFoundException("Item with id= " + userId + " hasn't not found"));
-        userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Not possible create Booking - " +
-                        "Not found User with Id " + userId));
+
+        if (!userRepository.existsById(userId)) {
+            throw new NotFoundException("Not possible create Booking - " +
+                    "Not found User with Id " + userId);
+        }
 
         if (bookingShortDto.getStart().isEqual(bookingShortDto.getEnd()) ||
                 bookingShortDto.getStart().isAfter(bookingShortDto.getEnd())) {

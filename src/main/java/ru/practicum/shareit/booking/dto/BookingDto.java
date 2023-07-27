@@ -17,18 +17,18 @@ public class BookingDto {
     private LocalDateTime end;
     private Status status;
 
-    private Booker booker;
+    private UserDt0 booker;
 
-    private Item item;
+    private ItemDto item;
 
     @Data
-    public static class Booker {
+    public static class UserDt0 {
         private final long id;
         private final String name;
     }
 
     @Data
-    public static class Item {
+    public static class ItemDto {
         private final long id;
         private final String name;
     }
