@@ -36,7 +36,6 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @ResponseBody
     @PatchMapping("/{id}")
     public UserDto updateUserById(@Validated(Marker.OnUpdate.class) @RequestBody UserDto userDto,
                                   @PathVariable Long id) {

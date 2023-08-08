@@ -32,13 +32,14 @@ import static ru.practicum.shareit.request.dto.ItemRequestMapper.itemRequestToRe
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
+@Transactional(readOnly = true)
 public class ItemRequestServiceImpl implements ItemRequestService {
     private final UserRepository userRepository;
     private final ItemRequestRepository itemRequestsRepository;
     private final ItemRepository itemRepository;
 
     @Override
+    @Transactional
     public ItemRequestDto createRequest(Long id, ItemRequestShortDto itemRequestShortDto) {
         ItemRequest itemRequest = ItemRequestMapper.itemRequestShortDtoToItemRequest(itemRequestShortDto);
 

@@ -26,5 +26,6 @@ public class BookingShortDto {
     @Future
     private LocalDateTime end;
 
+    @NotNull
     private Long itemId;
 }
