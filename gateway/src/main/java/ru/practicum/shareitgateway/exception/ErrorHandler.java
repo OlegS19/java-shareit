@@ -36,25 +36,19 @@ public class ErrorHandler {
         return new ErrorResponse("NoSuchElementException", e.getMessage());
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleIllegalArgumentException(MethodArgumentNotValidException e) {
-        log.error("Method Argument Not Valid Exception: {}", e.getMessage());
-        return new ErrorResponse("MethodArgumentNotValidException", e.getMessage());
-    }
 
-    @ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class, ValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handlerConstraintViolationException(ConstraintViolationException e) {
-        log.error("Constraint Violation Exception: {}", e.getMessage());
-        return new ErrorResponse("MethodArgumentNotValidException", e.getMessage());
+    public ErrorResponse handleBadRequestException(Exception e) {
+        if (e instanceof MethodArgumentNotValidException) {
+            log.error("Method Argument Not Valid Exception: {}", e.getMessage());
+            return new ErrorResponse("MethodArgumentNotValidException", e.getMessage());
+        } else if (e instanceof ConstraintViolationException) {
+            log.error("Constraint Violation Exception: {}", e.getMessage());
+            return new ErrorResponse("MethodArgumentNotValidException", e.getMessage());
+        } else {
+            log.error("Validation Exception: {}", e.getMessage());
+            return new ErrorResponse("MValidation Exception ", e.getMessage());
+        }
     }
-
-    @ExceptionHandler(ValidationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handlerConstraintViolationException(final ValidationException e) {
-        log.error("Validation Exception: {}", e.getMessage());
-        return new ErrorResponse("MValidation Exception ", e.getMessage());
-    }
-
 }
